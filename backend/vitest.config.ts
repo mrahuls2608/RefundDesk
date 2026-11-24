@@ -32,7 +32,7 @@ export default defineConfig({
           env: {
             ...testEnv,
             MONGODB_URI:
-              process.env.TEST_MONGODB_URI ?? 'mongodb://127.0.0.1:27017/refunddesk_test?replicaSet=rs0',
+              process.env.TEST_MONGODB_URI ?? 'mongodb://127.0.0.1:27017/refunddesk_test?replicaSet=rs0&directConnection=true',
             REDIS_URL: process.env.TEST_REDIS_URL ?? 'redis://127.0.0.1:6379/2',
             LOGIN_RATE_LIMIT_PER_MIN: '5',
           },

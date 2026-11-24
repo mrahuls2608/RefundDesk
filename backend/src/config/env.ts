@@ -10,7 +10,7 @@ const EnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   PORT: z.coerce.number().int().positive().default(8080),
   LOG_LEVEL: z.string().default('info'),
-  MONGODB_URI: z.string().default('mongodb://localhost:27017/refunddesk?replicaSet=rs0'),
+  MONGODB_URI: z.string().default('mongodb://localhost:27017/refunddesk?replicaSet=rs0&directConnection=true'),
   REDIS_URL: z.string().default('redis://localhost:6379'),
   JWT_SECRET: z.string().min(32, 'JWT_SECRET must be at least 32 characters'),
   JWT_TTL_MINUTES: z.coerce.number().int().positive().default(60),
