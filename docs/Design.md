@@ -40,19 +40,33 @@ Defined once in `packages/ui/src/tokens/tokens.css` as CSS variables. Components
 
 ### 3.1 Colour — Light Theme
 
+Brand: deep forest green with a lime accent (rebrand, Nov 2026). **Lime is only a fill, or a colour on forest/dark surfaces.** It is never text or a focus ring on a light background (1.5:1 contrast).
+
 **Brand and neutrals**
 | Token | Hex | Use |
 | --- | --- | --- |
-| `--color-primary-600` | `#1D4ED8` | Primary buttons, links, focus ring |
-| `--color-primary-700` | `#1E40AF` | Primary hover |
-| `--color-primary-50` | `#EFF6FF` | Selected rows, subtle highlights |
-| `--color-bg` | `#F8FAFC` | App background |
+| `--color-primary-600` | `#3F6212` | Links, focus ring, selected chips (white text on it: 7.1:1) |
+| `--color-primary-700` | `#365314` | Link hover |
+| `--color-primary-50` | `#F7FEE7` | Selected rows, subtle highlights |
+| `--color-accent` | `#A3E635` | Primary buttons and CTAs, highlights, glows |
+| `--color-accent-strong` | `#84CC16` | Primary button hover |
+| `--color-on-accent` | `#0B1A12` | Text on accent (11.9:1) |
+| `--color-bg` | `#F7F9F4` | App background |
 | `--color-surface` | `#FFFFFF` | Cards, tables, modals |
-| `--color-border` | `#E2E8F0` | Dividers, input borders |
-| `--color-border-strong` | `#94A3B8` | Input borders on hover |
-| `--color-text` | `#0F172A` | Primary text |
-| `--color-text-muted` | `#475569` | Secondary text, labels |
-| `--color-text-inverse` | `#FFFFFF` | Text on primary buttons |
+| `--color-border` | `#E3E8DF` | Dividers, input borders |
+| `--color-border-strong` | `#7A887E` | Input borders on hover |
+| `--color-text` | `#0E1A13` | Primary text |
+| `--color-text-muted` | `#4A5A50` | Secondary text, labels (6.9:1 on bg) |
+| `--color-text-inverse` | `#FFFFFF` | Text on primary and danger fills |
+
+**Forest surfaces** (dark brand panels on the landing page; same in both themes, slightly deeper in dark)
+| Token | Hex | Use |
+| --- | --- | --- |
+| `--color-forest-950` | `#0B1A12` | Hub section, footer |
+| `--color-forest-900` | `#10241A` | Hero, final CTA, featured cards |
+| `--color-forest-800` | `#183324` | Chips and nodes on forest |
+| `--color-on-forest` | `#F1F5F0` | Text on forest (14.8:1) |
+| `--color-on-forest-muted` | `#A7B5AC` | Secondary text on forest (7.6:1) |
 
 **Status (always paired with text and an icon)**
 | Token | Hex | Background token | Hex | Meaning |
@@ -60,7 +74,7 @@ Defined once in `packages/ui/src/tokens/tokens.css` as CSS variables. Components
 | `--color-success-700` | `#15803D` | `--color-success-50` | `#F0FDF4` | Refunded, approved |
 | `--color-warning-700` | `#B45309` | `--color-warning-50` | `#FFFBEB` | Needs manual review |
 | `--color-danger-700` | `#B91C1C` | `--color-danger-50` | `#FEF2F2` | Rejected, errors |
-| `--color-info-700` | `#1D4ED8` | `--color-info-50` | `#EFF6FF` | Open, investigating |
+| `--color-info-700` | `#1D4ED8` | `--color-info-50` | `#EFF6FF` | Open, investigating (kept blue so "in progress" never reads as the brand green) |
 | `--color-ai-700` | `#6D28D9` | `--color-ai-50` | `#F5F3FF` | AI proposal content |
 
 All `-700` text colours meet ≥ 4.5:1 contrast on white and on their `-50` background.
@@ -68,12 +82,13 @@ All `-700` text colours meet ≥ 4.5:1 contrast on white and on their `-50` back
 ### 3.2 Colour — Dark Theme
 | Token | Hex |
 | --- | --- |
-| `--color-bg` | `#0B1120` |
-| `--color-surface` | `#111827` |
-| `--color-border` | `#1F2937` |
-| `--color-text` | `#F1F5F9` |
-| `--color-text-muted` | `#94A3B8` |
-| `--color-primary-600` | `#60A5FA` |
+| `--color-bg` | `#0A120E` |
+| `--color-surface` | `#111C16` |
+| `--color-border` | `#1F2E25` |
+| `--color-text` | `#EEF3EC` |
+| `--color-text-muted` | `#9DAEA3` |
+| `--color-primary-600` | `#A3E635` (lime is allowed as text on dark: 12.6:1) |
+| `--color-text-inverse` | `#0A120E` |
 
 Dark theme follows `prefers-color-scheme` and can be toggled in the user menu. Status colours switch to their `-300` shades on `-950` backgrounds.
 
@@ -116,6 +131,7 @@ Minimum body size on mobile: 15 px. Never go below 12 px.
 | `--shadow-lg` | `0 10px 30px rgba(15,23,42,.15)` | Modals, menus |
 | `--motion-fast` | 120 ms ease-out | Hover, focus |
 | `--motion-base` | 200 ms ease-out | Modals, toasts |
+| `--ease-out` / `--ease-in-out` / `--ease-drawer` | `cubic-bezier(0.23,1,0.32,1)` / `(0.77,0,0.175,1)` / `(0.32,0.72,0,1)` | Entrances, on-screen movement, drawers and marketing reveals |
 
 All motion is disabled under `prefers-reduced-motion: reduce`.
 
