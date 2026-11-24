@@ -64,6 +64,7 @@ jobs:
         run: WEB_URL=http://localhost:3000 OUT_DIR=docs node frontend/e2e/record-demo.mjs
       - name: Convert to MP4
         run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg > /dev/null
           ffmpeg -loglevel error -y -i docs/demo.webm -c:v libx264 -preset slow -crf 26 -pix_fmt yuv420p -movflags +faststart docs/demo.mp4
           rm docs/demo.webm
           ls -la docs/demo.mp4 docs/screens
