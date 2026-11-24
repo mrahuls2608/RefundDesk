@@ -4,12 +4,13 @@ import { Faq, FAQ } from '@/components/landing/Faq';
 import { FinalCta } from '@/components/landing/FinalCta';
 import { Guarantees } from '@/components/landing/Guarantees';
 import { Hero } from '@/components/landing/Hero';
-import { HowItWorks } from '@/components/landing/HowItWorks';
+import { HubSection } from '@/components/landing/HubSection';
 import { IdempotencyDemo } from '@/components/landing/IdempotencyDemo';
 import { LandingFooter } from '@/components/landing/LandingFooter';
 import { LandingNav } from '@/components/landing/LandingNav';
-import { StackMarquee } from '@/components/landing/StackMarquee';
-import { Stats } from '@/components/landing/Stats';
+import { ProblemSection } from '@/components/landing/ProblemSection';
+import { ProcessLine } from '@/components/landing/ProcessLine';
+import { RoleCards } from '@/components/landing/RoleCards';
 import { TaglineReveal } from '@/components/landing/TaglineReveal';
 
 export const metadata: Metadata = {
@@ -38,12 +39,13 @@ export default function LandingPage() {
       <LandingNav />
       <main id="main" className="overflow-x-clip">
         <Hero />
-        <StackMarquee />
-        <HowItWorks />
-        <TaglineReveal />
+        <ProblemSection />
+        <HubSection />
+        <RoleCards />
         <Guarantees />
+        <ProcessLine />
+        <TaglineReveal />
         <IdempotencyDemo />
-        <Stats />
         <Faq />
         <FinalCta />
       </main>

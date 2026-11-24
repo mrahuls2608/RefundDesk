@@ -38,5 +38,6 @@ records how each technical decision maps. Where this file and TRD.md disagree, t
 
 ## Landing page decisions
 
-- The landing page follows `Design.md` tokens, Inter and Lucide for consistency with the apps. The landing page design guidance used during the build prefers Geist and Phosphor; the project design system wins.
+- The product was rebranded to forest green + lime (inspired by a reference landing page the product owner supplied). `Design.md` §3.1 has the new tokens; lime is never used as text on light backgrounds.
+- The landing page uses Inter and Lucide for consistency with the apps. The landing page design guidance used during the build prefers Geist and Phosphor; the project design system wins.
 - Motion uses the strong easing tokens in `tokens.css` (`--ease-out`, `--ease-in-out`, `--ease-drawer`), CSS transitions and `IntersectionObserver` only, with no animation library. Everything respects `prefers-reduced-motion`, and the hero demo can be paused.

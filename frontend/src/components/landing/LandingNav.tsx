@@ -32,10 +32,10 @@ export function LandingNav() {
     <header className="pointer-events-none fixed inset-x-0 top-0 z-40 flex justify-center px-4">
       <nav
         aria-label="Main"
-        className="pointer-events-auto relative z-50 mx-auto mt-6 flex w-max max-w-full items-center gap-2 rounded-full border border-border bg-glass py-2 pl-4 pr-2 shadow-lg backdrop-blur-xl"
+        className="pointer-events-auto relative z-50 mx-auto mt-6 flex w-max max-w-full items-center gap-2 rounded-full border border-forest-line bg-forest-glass py-2 pl-4 pr-2 text-forest-on shadow-lg backdrop-blur-xl"
       >
         <Link href="/" aria-label="RefundDesk home" className="rounded-full pr-2">
-          <Logo />
+          <Logo tone="forest" />
         </Link>
         <ul className="hidden items-center gap-1 md:flex">
           {NAV_SECTIONS.map((section) => (
@@ -45,7 +45,7 @@ export function LandingNav() {
                 aria-current={active === section.id ? 'location' : undefined}
                 className={cx(
                   'inline-flex h-9 items-center rounded-full px-3 text-sm font-medium transition-colors duration-200 ease-out',
-                  active === section.id ? 'bg-primary-50 text-primary-700' : 'text-text-muted hover:text-text',
+                  active === section.id ? 'bg-forest-800 text-accent' : 'text-forest-muted hover:text-forest-on',
                 )}
               >
                 {section.label}
@@ -53,12 +53,12 @@ export function LandingNav() {
             </li>
           ))}
         </ul>
-        <div className="hidden md:block">
+        <div className="hidden text-forest-muted md:block [&_button:hover]:bg-forest-800 [&_button]:text-forest-muted">
           <ThemeToggle />
         </div>
         <Link
           href={cta.href}
-          className="hidden h-9 items-center rounded-full bg-primary-600 px-3 text-sm font-semibold text-text-inverse transition-[transform,background-color] duration-150 ease-out hover:bg-primary-700 active:scale-[0.97] sm:inline-flex"
+          className="hidden h-9 items-center rounded-full bg-accent px-3 text-sm font-semibold text-accent-on transition-[transform,background-color] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97] sm:inline-flex"
         >
           {cta.label}
         </Link>
@@ -73,11 +73,11 @@ export function LandingNav() {
         >
           <span
             aria-hidden="true"
-            className={cx('absolute h-0.5 w-5 rounded-full bg-text transition-transform duration-700 ease-drawer', open ? 'rotate-45' : '-translate-y-1.5')}
+            className={cx('absolute h-0.5 w-5 rounded-full bg-forest-on transition-transform duration-700 ease-drawer', open ? 'rotate-45' : '-translate-y-1.5')}
           />
           <span
             aria-hidden="true"
-            className={cx('absolute h-0.5 w-5 rounded-full bg-text transition-transform duration-700 ease-drawer', open ? '-rotate-45' : 'translate-y-1.5')}
+            className={cx('absolute h-0.5 w-5 rounded-full bg-forest-on transition-transform duration-700 ease-drawer', open ? '-rotate-45' : 'translate-y-1.5')}
           />
         </button>
       </nav>
@@ -90,7 +90,7 @@ export function LandingNav() {
         aria-label="Menu"
         inert={!open}
         className={cx(
-          'fixed inset-0 z-40 flex flex-col justify-center gap-8 bg-overlay px-8 backdrop-blur-3xl transition-[opacity,visibility] duration-700 ease-drawer md:hidden',
+          'fixed inset-0 z-40 flex flex-col justify-center gap-8 bg-forest-glass px-8 backdrop-blur-3xl transition-[opacity,visibility] duration-700 ease-drawer md:hidden',
           open ? 'pointer-events-auto visible opacity-100' : 'invisible opacity-0',
         )}
       >
@@ -102,18 +102,20 @@ export function LandingNav() {
               className={cx('transition-[opacity,transform] duration-700 ease-drawer', open ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0')}
             >
               {item.id === 'cta' ? (
-                <Link href={cta.href} onClick={() => setOpen(false)} className="text-3xl font-semibold text-primary-600">
+                <Link href={cta.href} onClick={() => setOpen(false)} className="text-3xl font-semibold text-accent">
                   {cta.label}
                 </Link>
               ) : (
-                <a href={`#${item.id}`} onClick={() => setOpen(false)} className="text-3xl font-semibold text-text">
+                <a href={`#${item.id}`} onClick={() => setOpen(false)} className="text-3xl font-semibold text-forest-on">
                   {item.label}
                 </a>
               )}
             </li>
           ))}
         </ul>
-        <ThemeToggle />
+        <div className="[&_button]:text-forest-muted">
+          <ThemeToggle />
+        </div>
       </div>
     </header>
   );

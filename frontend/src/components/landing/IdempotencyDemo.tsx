@@ -4,6 +4,7 @@ import { MousePointerClick, RotateCcw } from 'lucide-react';
 import { useState } from 'react';
 import { cx } from '@/components/ui';
 import { formatINR } from '@/lib/format';
+import { AccentWords } from './AccentWords';
 import { Reveal } from './Reveal';
 
 const AMOUNT = 499;
@@ -50,7 +51,7 @@ export function IdempotencyDemo() {
         <Reveal className="max-w-[680px]">
           <p className="mb-3 text-sm font-semibold text-primary-600">Double click test</p>
           <h2 id="try-title" className="mb-4 text-3xl font-semibold tracking-tight text-text text-balance sm:text-4xl">
-            Click approve as fast as you can. You still pay once.
+            Click approve as fast as you can. <AccentWords>You still pay once.</AccentWords>
           </h2>
           <p className="text-lg text-text-muted text-pretty">
             Retries, double clicks and two approvers on the same case are where refund systems leak money. RefundDesk checks the case
@@ -77,7 +78,7 @@ export function IdempotencyDemo() {
               <button
                 type="button"
                 onClick={approve}
-                className="inline-flex h-12 items-center justify-center gap-2 rounded-md bg-primary-600 px-3 py-2 text-base font-semibold text-text-inverse transition-[transform,background-color] duration-100 ease-out hover:bg-primary-700 active:scale-[0.97]"
+                className="inline-flex h-12 items-center justify-center gap-2 rounded-full bg-accent px-3 py-2 text-base font-semibold text-accent-on transition-[transform,background-color] duration-100 ease-out hover:bg-accent-strong active:scale-[0.97]"
               >
                 <MousePointerClick aria-hidden="true" className="h-5 w-5" />
                 Approve refund
