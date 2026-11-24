@@ -4,7 +4,7 @@
 //   WEB_URL=http://localhost:3000 OUT_DIR=../docs node frontend/e2e/record-demo.mjs
 //
 // Output: $OUT_DIR/demo.webm (convert to mp4 with ffmpeg) and $OUT_DIR/screens/NN-name.png
-import { mkdir, readdir, rename, rm } from 'node:fs/promises';
+import { mkdir, readdir, rename, rm, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { chromium } from 'playwright';
 
@@ -17,6 +17,9 @@ const VIEWPORT = { width: 1280, height: 800 };
 const PHONE = { width: 390, height: 844 };
 
 let shotIndex = 0;
+/** Caption timestamps relative to the start of the video, written out as chapters for the landing page player. */
+const chapters = [];
+let videoStartedAt = 0;
 
 /** Visible cursor and a caption bar, re-created on every page load. Hidden while screenshots are taken. */
 const OVERLAY_SCRIPT = () => {
@@ -55,6 +58,7 @@ const log = (text) => process.stdout.write(`${text}\n`);
 
 async function caption(page, text) {
   log(`▸ ${text}`);
+  if (videoStartedAt) chapters.push({ time: Math.max(0, Math.round((Date.now() - videoStartedAt) / 100) / 10), title: text });
   await page.evaluate((t) => {
     const state = JSON.parse(sessionStorage.getItem('__demo') ?? '{}');
     sessionStorage.setItem('__demo', JSON.stringify({ ...state, caption: t }));
@@ -320,6 +324,7 @@ async function main() {
   const context = await browser.newContext({ viewport: VIEWPORT, recordVideo: { dir: VIDEO_TMP, size: VIEWPORT } });
   await context.addInitScript(OVERLAY_SCRIPT);
   const page = await context.newPage();
+  videoStartedAt = Date.now();
   page.setDefaultTimeout(20000);
   try {
     await landing(page);
@@ -339,6 +344,7 @@ async function main() {
   const [video] = await readdir(VIDEO_TMP);
   await rename(join(VIDEO_TMP, video), join(OUT_DIR, 'demo.webm'));
   await rm(VIDEO_TMP, { recursive: true, force: true });
+  await writeFile(join(OUT_DIR, 'demo-chapters.json'), `${JSON.stringify(chapters, null, 2)}\n`);
   log(`Video: ${join(OUT_DIR, 'demo.webm')} · ${shotIndex} screenshots in ${SCREENS_DIR}`);
 }
 
