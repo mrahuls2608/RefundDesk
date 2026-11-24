@@ -1,0 +1,52 @@
+# Full local stack: MongoDB (single-node replica set), Redis, API, agent worker, web.
+#   cp .env.example .env && docker compose up --build
+#   docker compose exec api node dist/seed/run.js      # demo data
+services:
+  mongo:
+    image: mongo:7
+    command: ["--replSet", "rs0", "--bind_ip_all"]
+    ports: ["27017:27017"]
+    volumes: [mongo-data:/data/db]
+    healthcheck:
+      # Initiates the replica set on first start (transactions need it), then reports healthy.
+      test: ["CMD", "mongosh", "--quiet", "--eval", "try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'localhost:27017'}]}).ok }"]
+      interval: 5s
+      retries: 20
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    ports: ["6379:6379"]
+    volumes: [redis-data:/data]
+    healthcheck: { test: ["CMD", "redis-cli", "ping"], interval: 5s, retries: 10 }
+
+  api:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    env_file: .env
+    environment: &backend-env
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongo:27017/refunddesk?replicaSet=rs0&directConnection=true
+      REDIS_URL: redis://redis:6379
+      RUN_WORKER_INLINE: "false"
+      ALLOW_DEMO_SEED: "true"
+    ports: ["8080:8080"]
+    depends_on: { mongo: { condition: service_healthy }, redis: { condition: service_healthy } }
+
+  worker:
+    build: { context: ., dockerfile: backend/Dockerfile }
+    command: ["node", "dist/worker.js"]
+    env_file: .env
+    environment: *backend-env
+    depends_on: { mongo: { condition: service_healthy }, redis: { condition: service_healthy } }
+
+  web:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args: { NEXT_PUBLIC_API_BASE_URL: "${NEXT_PUBLIC_API_BASE_URL:-http://localhost:8080}" }
+    ports: ["3000:3000"]
+    depends_on: [api]
+
+volumes:
+  mongo-data:
+  redis-data:

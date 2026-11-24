@@ -1,0 +1,37 @@
+name: backend-ci
+on:
+  push: { branches: [main], paths: ["backend/**", "package-lock.json", ".github/workflows/backend-ci.yml"] }
+  pull_request: { paths: ["backend/**", "package-lock.json", ".github/workflows/backend-ci.yml"] }
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start MongoDB replica set (transactions need one)
+        run: |
+          docker run -d --name mongo -p 27017:27017 mongo:7 --replSet rs0 --bind_ip_all
+          for i in $(seq 1 30); do
+            docker exec mongo mongosh --quiet --eval "try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'localhost:27017'}]}).ok }" && break
+            sleep 2
+          done
+          until docker exec mongo mongosh --quiet --eval "db.hello().isWritablePrimary" | grep -q true; do sleep 1; done
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - run: npm run typecheck -w backend
+      - name: Unit + architecture tests
+        run: npm test -w backend
+      - name: Integration tests (MongoDB + Redis)
+        run: npm run test:it -w backend
+        env:
+          TEST_MONGODB_URI: mongodb://127.0.0.1:27017/refunddesk_test?replicaSet=rs0&directConnection=true
+          TEST_REDIS_URL: redis://127.0.0.1:6379/2
+      - name: Agent eval (offline mock provider)
+        run: npm run test:eval -w backend
+      - run: npm run build -w backend
+      - run: docker build -f backend/Dockerfile -t refunddesk-backend .
