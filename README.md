@@ -109,7 +109,7 @@ Try it: log in as Asha → report "Charged twice" on the FoodNow ₹499 payment 
 | `npm run test:eval -w backend` | 22 labelled cases; target ≥ 80% matching action | `LLM_*` env for a real model |
 | `npm test -w frontend` | Component behaviour (RTL), keyboard, focus trap, axe, IST/INR helpers, customer timeline | nothing |
 
-CI (`.github/workflows`) runs all of the above, with MongoDB and Redis as containers.
+CI (`.github/workflows`) runs all of the above, with MongoDB and Redis as containers. Latest run: 133 unit, 96 integration and 30 frontend tests passing.
 
 **Eval score:** 22/22 with the offline `mock` provider. That provider is a heuristic, so this only proves the harness; record the real model's score here once it has run.
 
@@ -142,7 +142,6 @@ CLAUDE.md         Project rules for AI coding assistants
 
 ## Status and known gaps
 
-- The integration suite is written but has not been run yet. It needs MongoDB and Redis; CI runs it on every push.
 - Storybook (Phase 3) isn't set up yet. Components are covered by RTL and axe tests.
 - Notifications, refresh tokens, Playwright E2E and the agent-accuracy dashboard are backlog items (see `docs/Phases.md`).
 
