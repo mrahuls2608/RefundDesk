@@ -19,6 +19,26 @@ const config: Config = {
         danger: { 50: token('color-danger-50'), 700: token('color-danger-700') },
         info: { 50: token('color-info-50'), 700: token('color-info-700') },
         ai: { 50: token('color-ai-50'), 700: token('color-ai-700') },
+        glass: token('color-glass'),
+        overlay: token('color-overlay'),
+      },
+      transitionTimingFunction: {
+        out: token('ease-out'),
+        'in-out': token('ease-in-out'),
+        drawer: token('ease-drawer'),
+      },
+      keyframes: {
+        rise: {
+          from: { opacity: '0', transform: 'translateY(40%)', filter: 'blur(8px)' },
+          to: { opacity: '1', transform: 'translateY(0)', filter: 'blur(0)' },
+        },
+        marquee: { from: { transform: 'translateX(0)' }, to: { transform: 'translateX(-50%)' } },
+        'fade-up': { from: { opacity: '0', transform: 'translateY(8px)' }, to: { opacity: '1', transform: 'translateY(0)' } },
+      },
+      animation: {
+        rise: 'rise 900ms var(--ease-drawer) both',
+        marquee: 'marquee 40s linear infinite',
+        'fade-up': 'fade-up 300ms var(--ease-out) both',
       },
       fontFamily: {
         sans: ['"Inter Variable"', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'sans-serif'],

@@ -31,7 +31,12 @@ records how each technical decision maps. Where this file and TRD.md disagree, t
 | ArchUnit | `test/unit/architecture.test.ts` | Import-rule checks, same rules as TRD §3.1 |
 | JUnit + Testcontainers | Vitest + Supertest against real MongoDB/Redis (CI services) | `npm run test:it -w backend` |
 | `/internal/refunds` endpoint | Not exposed; refunds are an in-process call | Matches "disabled in prod" |
-| Two Vite apps + `packages/ui` | One **Next.js** app: customer portal at `/`, ops console at `/ops` | `frontend/src/components/ui` = presentational kit |
+| Two Vite apps + `packages/ui` | One **Next.js** app: public landing page at `/`, customer portal at `/transactions` and `/cases/*`, ops console at `/ops` | `frontend/src/components/ui` = presentational kit; `components/landing` = marketing sections |
 | CSS Modules + tokens | Tailwind theme mapped 1:1 to CSS variable tokens | `frontend/src/app/tokens.css` |
 | Storybook | Not yet set up (backlog) | Components have RTL + axe tests |
 | Render + Neon + Vercel | Any Docker host + MongoDB Atlas + Redis (e.g. Upstash) + Vercel | See README |
+
+## Landing page decisions
+
+- The landing page follows `Design.md` tokens, Inter and Lucide for consistency with the apps. The landing page design guidance used during the build prefers Geist and Phosphor; the project design system wins.
+- Motion uses the strong easing tokens in `tokens.css` (`--ease-out`, `--ease-in-out`, `--ease-drawer`), CSS transitions and `IntersectionObserver` only, with no animation library. Everything respects `prefers-reduced-motion`, and the hero demo can be paused.
