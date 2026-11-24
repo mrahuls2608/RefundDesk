@@ -37,14 +37,14 @@ export function LandingNav() {
         <Link href="/" aria-label="RefundDesk home" className="rounded-full pr-2">
           <Logo tone="forest" />
         </Link>
-        <ul className="hidden items-center gap-1 md:flex">
+        <ul className="hidden items-center gap-1 lg:flex">
           {NAV_SECTIONS.map((section) => (
             <li key={section.id}>
               <a
                 href={`#${section.id}`}
                 aria-current={active === section.id ? 'location' : undefined}
                 className={cx(
-                  'inline-flex h-9 items-center rounded-full px-3 text-sm font-medium transition-colors duration-200 ease-out',
+                  'inline-flex h-9 items-center whitespace-nowrap rounded-full px-3 text-sm font-medium transition-colors duration-200 ease-out',
                   active === section.id ? 'bg-forest-800 text-accent' : 'text-forest-muted hover:text-forest-on',
                 )}
               >
@@ -53,12 +53,12 @@ export function LandingNav() {
             </li>
           ))}
         </ul>
-        <div className="hidden text-forest-muted md:block [&_button:hover]:bg-forest-800 [&_button]:text-forest-muted">
+        <div className="hidden text-forest-muted lg:block [&_button:hover]:bg-forest-800 [&_button]:text-forest-muted">
           <ThemeToggle />
         </div>
         <Link
           href={cta.href}
-          className="hidden h-9 items-center rounded-full bg-accent px-3 text-sm font-semibold text-accent-on transition-[transform,background-color] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97] sm:inline-flex"
+          className="hidden h-9 items-center whitespace-nowrap rounded-full bg-accent px-3 text-sm font-semibold text-accent-on transition-[transform,background-color] duration-150 ease-out hover:bg-accent-strong active:scale-[0.97] sm:inline-flex"
         >
           {cta.label}
         </Link>
@@ -69,7 +69,7 @@ export function LandingNav() {
           aria-controls="landing-menu"
           aria-label={open ? 'Close menu' : 'Open menu'}
           onClick={() => setOpen((value) => !value)}
-          className="relative z-50 inline-flex h-11 w-11 items-center justify-center rounded-full md:hidden"
+          className="relative z-50 inline-flex h-11 w-11 items-center justify-center rounded-full lg:hidden"
         >
           <span
             aria-hidden="true"
@@ -90,7 +90,7 @@ export function LandingNav() {
         aria-label="Menu"
         inert={!open}
         className={cx(
-          'fixed inset-0 z-40 flex flex-col justify-center gap-8 bg-forest-glass px-8 backdrop-blur-3xl transition-[opacity,visibility] duration-700 ease-drawer md:hidden',
+          'fixed inset-0 z-40 flex flex-col justify-center gap-8 bg-forest-glass px-8 backdrop-blur-3xl transition-[opacity,visibility] duration-700 ease-drawer lg:hidden',
           open ? 'pointer-events-auto visible opacity-100' : 'invisible opacity-0',
         )}
       >

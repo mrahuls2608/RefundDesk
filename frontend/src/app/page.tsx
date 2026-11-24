@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { SkipLink } from '@/components/layout/SkipLink';
 import { Faq, FAQ } from '@/components/landing/Faq';
+import { DemoVideo } from '@/components/landing/DemoVideo';
 import { FinalCta } from '@/components/landing/FinalCta';
 import { Guarantees } from '@/components/landing/Guarantees';
 import { Hero } from '@/components/landing/Hero';
@@ -42,6 +43,7 @@ export default function LandingPage() {
         <ProblemSection />
         <HubSection />
         <RoleCards />
+        <DemoVideo />
         <Guarantees />
         <ProcessLine />
         <TaglineReveal />
