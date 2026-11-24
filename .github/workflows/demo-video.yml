@@ -68,8 +68,9 @@ jobs:
           ffmpeg -loglevel error -y -i docs/demo.webm -c:v libx264 -preset slow -crf 26 -pix_fmt yuv420p -movflags +faststart docs/demo.mp4
           rm docs/demo.webm
           ffmpeg -loglevel error -y -ss 4 -i docs/demo.mp4 -frames:v 1 -q:v 4 docs/demo-poster.jpg
-          # The landing page serves the same files from the web app's public folder
-          cp docs/demo.mp4 docs/demo-poster.jpg docs/demo-chapters.json frontend/public/
+          # The landing page serves the video and poster from public/ and bundles the chapters at build time
+          cp docs/demo.mp4 docs/demo-poster.jpg frontend/public/
+          cp docs/demo-chapters.json frontend/src/components/landing/demo-chapters.json
           ls -la docs/demo.mp4 docs/demo-poster.jpg docs/screens
       - name: Upload logs on failure
         if: failure()
@@ -84,7 +85,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add docs/demo.mp4 docs/demo-poster.jpg docs/demo-chapters.json docs/screens frontend/public/demo.mp4 frontend/public/demo-poster.jpg frontend/public/demo-chapters.json
+          git add docs/demo.mp4 docs/demo-poster.jpg docs/demo-chapters.json docs/screens frontend/public/demo.mp4 frontend/public/demo-poster.jpg frontend/src/components/landing/demo-chapters.json
           git diff --cached --quiet && exit 0
           git commit -m "docs: record end to end demo video and screenshots [skip ci]"
           git push

@@ -1,9 +1,10 @@
 'use client';
 
 import { PlayCircle } from 'lucide-react';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { cx } from '@/components/ui';
 import { AccentWords } from './AccentWords';
+import recordedChapters from './demo-chapters.json';
 import { Reveal } from './Reveal';
 
 interface Chapter {
@@ -13,7 +14,6 @@ interface Chapter {
 
 const VIDEO_SRC = '/demo.mp4';
 const POSTER_SRC = '/demo-poster.jpg';
-const CHAPTERS_SRC = '/demo-chapters.json';
 
 function formatTime(seconds: number): string {
   const whole = Math.floor(seconds);
@@ -22,23 +22,12 @@ function formatTime(seconds: number): string {
 
 /**
  * The recorded end to end demo. Never autoplays (data, attention and reduced motion); native
- * controls give play, pause and seek; chapters come from the recorder's own captions and jump the video.
+ * controls give play, pause and seek. Chapters are written by the demo recorder from its own captions
+ * and bundled at build time, so they always match the committed video.
  */
-export function DemoVideo() {
+export function DemoVideo({ chapters = recordedChapters as Chapter[] }: { chapters?: Chapter[] }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [chapters, setChapters] = useState<Chapter[]>([]);
   const [current, setCurrent] = useState(-1);
-
-  useEffect(() => {
-    let cancelled = false;
-    fetch(CHAPTERS_SRC)
-      .then((res) => (res.ok ? (res.json() as Promise<Chapter[]>) : []))
-      .then((data) => !cancelled && setChapters(data))
-      .catch(() => undefined); // chapters are an enhancement; the video works without them
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   const onTimeUpdate = () => {
     const time = videoRef.current?.currentTime ?? 0;

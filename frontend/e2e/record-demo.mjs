@@ -124,8 +124,7 @@ async function logout(page) {
 }
 
 async function landing(page) {
-  await page.goto(WEB_URL);
-  await page.waitForLoadState('networkidle');
+  await page.goto(WEB_URL, { waitUntil: 'load' });
   await caption(page, 'RefundDesk: AI investigates, humans approve, money moves once');
   await page.mouse.move(640, 300, { steps: 10 });
   await sleep(7000); // let the live hero demo play through to "refunded"
