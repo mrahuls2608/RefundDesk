@@ -1,0 +1,19 @@
+{
+  "name": "refunddesk",
+  "private": true,
+  "version": "0.1.0",
+  "description": "RefundDesk — AI-assisted refund and dispute desk (Next.js + Express + MongoDB + Redis)",
+  "workspaces": ["backend", "frontend"],
+  "scripts": {
+    "dev:api": "npm run dev -w backend",
+    "dev:worker": "npm run worker:dev -w backend",
+    "dev:web": "npm run dev -w frontend",
+    "seed": "npm run seed -w backend",
+    "test": "npm test -w backend && npm test -w frontend",
+    "typecheck": "npm run typecheck -w backend && npm run typecheck -w frontend",
+    "build": "npm run build -w backend && npm run build -w frontend"
+  },
+  "engines": { "node": ">=20" },
+  "license": "MIT",
+  "author": "M N Santhi Swarup"
+}
