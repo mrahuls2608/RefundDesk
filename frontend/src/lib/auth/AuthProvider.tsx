@@ -11,6 +11,8 @@ import type { AuthUser, Role } from '../api/types';
 interface AuthContextValue {
   ready: boolean;
   user: AuthUser | null;
+  /** True after an explicit logout or expiry: the provider handles the redirect, guards must not race it. */
+  signingOut: boolean;
   login: (email: string, password: string) => Promise<AuthUser>;
   logout: () => void;
 }
@@ -29,9 +31,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const queryClient = useQueryClient();
   const [session, setSession] = useState<Session | null>(null);
   const [ready, setReady] = useState(false);
+  const [signingOut, setSigningOut] = useState(false);
 
   const endSession = useCallback(
     (reason?: 'expired') => {
+      setSigningOut(true);
       clearSession();
       setSession(null);
       queryClient.clear();
@@ -53,12 +57,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const next = sessionFromLogin(response);
     saveSession(next);
     setSession(next);
+    setSigningOut(false);
     return next.user;
   }, []);
 
   const value = useMemo<AuthContextValue>(
-    () => ({ ready, user: session?.user ?? null, login, logout: () => endSession() }),
-    [ready, session, login, endSession],
+    () => ({ ready, user: session?.user ?? null, signingOut, login, logout: () => endSession() }),
+    [ready, session, signingOut, login, endSession],
   );
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

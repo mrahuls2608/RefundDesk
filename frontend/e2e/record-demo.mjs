@@ -107,7 +107,7 @@ async function login(page, email) {
 
 async function logout(page) {
   await clickVisibly(page, page.getByRole('button', { name: 'Log out' }));
-  await page.waitForURL('**/login');
+  await page.waitForURL((url) => url.pathname === '/login');
 }
 
 async function landing(page) {
@@ -149,7 +149,7 @@ async function landing(page) {
   await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'smooth' }));
   await sleep(1500);
   await clickVisibly(page, page.getByRole('link', { name: 'Try the live demo' }).first());
-  await page.waitForURL('**/login');
+  await page.waitForURL((url) => url.pathname === '/login');
 }
 
 async function customerReports(page) {
