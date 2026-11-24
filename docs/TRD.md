@@ -657,7 +657,8 @@ Tool calls are scoped to the case's own `userId`; the agent cannot query other u
 | App | Route | Page | Guard |
 | --- | --- | --- | --- |
 | customer | `/login` | Login | public |
-| customer | `/` | Transactions | CUSTOMER |
+| customer | `/` | Landing page | public |
+| customer | `/transactions` | Transactions | CUSTOMER |
 | customer | `/cases/new?txn=101` | RaiseCase | CUSTOMER |
 | customer | `/cases/:id` | CaseStatus | CUSTOMER |
 | ops | `/login` | Login | public |

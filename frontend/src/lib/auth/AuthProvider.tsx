@@ -20,7 +20,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export const STAFF_ROLES: readonly Role[] = ['OPS', 'APPROVER', 'ADMIN'];
 
 export function homeFor(role: Role): string {
-  return role === 'CUSTOMER' ? '/' : '/ops';
+  return role === 'CUSTOMER' ? '/transactions' : '/ops';
 }
 
 /** Holds the session and wires the HTTP client: JWT on every call, global 401 → logout. */

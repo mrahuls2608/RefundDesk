@@ -21,7 +21,7 @@ export default function CaseStatusPage() {
 
   return (
     <>
-      <Link href="/" className="text-small text-primary-600 underline">
+      <Link href="/transactions" className="text-small text-primary-600 underline">
         ← My transactions
       </Link>
       <div className="flex flex-wrap items-center justify-between gap-2">

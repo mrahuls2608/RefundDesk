@@ -17,7 +17,7 @@ export default function CustomerLayout({ children }: { children: ReactNode }) {
       <SkipLink />
       <header className="sticky top-0 z-30 border-b border-border bg-surface">
         <div className="mx-auto flex max-w-content items-center justify-between gap-2 px-4 py-2">
-          <Link href="/" className="rounded-sm">
+          <Link href="/transactions" className="rounded-sm">
             <Logo />
           </Link>
           <UserMenu />

@@ -63,7 +63,7 @@ function RaiseCaseForm() {
 
   return (
     <>
-      <Link href="/" className="text-small text-primary-600 underline">
+      <Link href="/transactions" className="text-small text-primary-600 underline">
         ← My transactions
       </Link>
       <h1 ref={headingRef} tabIndex={-1} className="text-h1 outline-none">
