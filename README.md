@@ -60,7 +60,7 @@ The original design docs targeted Java/Spring + PostgreSQL. [`docs/STACK.md`](do
 
 ## Features
 
-**Landing page (`/`)**: floating glass nav with a morphing mobile menu · a live hero demo of one case going from report to refund (pausable, static under reduced motion) · sticky scroll walkthrough of the case lifecycle · word by word tagline reveal · bento grid of guarantees · an interactive double click test where the ledger never passes one refund · CI stats that count up · FAQ with schema.org markup · generated social image and favicon.
+**Landing page (`/`)**: forest green + lime brand · dark rounded hero with drifting hexagon art and a live demo of one case going from report to refund (pausable, static under reduced motion) · problem section with a pulsing radar and CI stats that count up · glowing agent hub where the case flow lights up node by node · role cards · guarantees bento with a highlighter sweep on headings · process line that draws itself on scroll · word by word tagline reveal · interactive double click test where the ledger never passes one refund · FAQ with schema.org markup · circuit line CTA · giant wordmark footer.
 
 **Customer portal (`/transactions`)**: transactions grouped by day · report an issue · case status timeline (Received → In review → Decision → Refunded) · outcome card · polls while the AI works · live-region announcements.
 
