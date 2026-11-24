@@ -1,0 +1,114 @@
+[
+  {
+    "time": 0.3,
+    "title": "RefundDesk: AI investigates, humans approve, money moves once"
+  },
+  {
+    "time": 8.5,
+    "title": "The problem, and the proof from CI"
+  },
+  {
+    "time": 10.9,
+    "title": "A read only agent: the case flows around it, one step at a time"
+  },
+  {
+    "time": 15.4,
+    "title": "Every role gets its own screen, and every safeguard is built in"
+  },
+  {
+    "time": 18.1,
+    "title": "From complaint to refund in one system"
+  },
+  {
+    "time": 23,
+    "title": "The double click test: click approve as fast as you like"
+  },
+  {
+    "time": 26.4,
+    "title": "7 clicks, still exactly 1 refund"
+  },
+  {
+    "time": 28.7,
+    "title": "Now the real thing: try the live demo"
+  },
+  {
+    "time": 32.6,
+    "title": "A wrong password shows a clear, specific error"
+  },
+  {
+    "time": 37,
+    "title": "Asha, a customer, logs in"
+  },
+  {
+    "time": 40.3,
+    "title": "She was charged twice by FoodNow: ₹499.00, 40 seconds apart"
+  },
+  {
+    "time": 42.7,
+    "title": "Forms validate before anything is sent"
+  },
+  {
+    "time": 44.3,
+    "title": "She picks \"Charged twice\" and adds a note"
+  },
+  {
+    "time": 49.9,
+    "title": "Request #1 received. The AI agent starts investigating straight away"
+  },
+  {
+    "time": 53.3,
+    "title": "Ravi, a support agent, logs in with one click on a demo account"
+  },
+  {
+    "time": 55.7,
+    "title": "Live queue counts up top, and the queue shows only cases that need action"
+  },
+  {
+    "time": 58.3,
+    "title": "Where the case stands, then the AI proposal: a full refund, with reasons and confidence"
+  },
+  {
+    "time": 61,
+    "title": "Related transactions: the duplicate is flagged automatically"
+  },
+  {
+    "time": 62.8,
+    "title": "Ops can add internal notes. Only an approver can decide"
+  },
+  {
+    "time": 68.5,
+    "title": "Priya, an approver, reviews the case"
+  },
+  {
+    "time": 72.7,
+    "title": "She approves: the amount is capped at the original charge and a comment is required"
+  },
+  {
+    "time": 77.9,
+    "title": "Refunded exactly once, keyed to the case. The case closes automatically"
+  },
+  {
+    "time": 80.4,
+    "title": "The audit log records every step: who, what and when"
+  },
+  {
+    "time": 83.9,
+    "title": "Dark mode, for long shifts"
+  },
+  {
+    "time": 87.7,
+    "title": "Back to Asha: her request shows the refund"
+  },
+  {
+    "time": 93.5,
+    "title": "Admins manage users and the policy rules the agent reads"
+  },
+  {
+    "time": 100.4,
+    "title": "Every screen works by keyboard and passes automated accessibility checks"
+  },
+  {
+    "time": 103.7,
+    "title": "RefundDesk · open source · github.com/mrahuls2608/refunddesk"
+  }
+]
