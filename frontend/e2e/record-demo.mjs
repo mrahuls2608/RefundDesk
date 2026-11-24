@@ -95,11 +95,20 @@ async function wheel(page, distance, step = 140) {
   }
 }
 
-async function login(page, email) {
+/** Demo account buttons on the login page, by role label. */
+const DEMO_BUTTON = { 'asha@demo.in': 'Customer', 'ravi@demo.in': 'Ops agent', 'priya@demo.in': 'Approver', 'admin@demo.in': 'Admin' };
+
+async function login(page, email, { quickFill = false } = {}) {
   await page.goto(`${WEB_URL}/login`);
   await page.getByLabel('Email').waitFor();
-  await typeVisibly(page, page.getByLabel('Email'), email);
-  await typeVisibly(page, page.getByLabel('Password'), PASSWORD);
+  if (quickFill) {
+    // One click demo account button fills email and password
+    await clickVisibly(page, page.getByRole('button', { name: new RegExp(`^${DEMO_BUTTON[email]}`) }));
+    await sleep(500);
+  } else {
+    await typeVisibly(page, page.getByLabel('Email'), email);
+    await typeVisibly(page, page.getByLabel('Password'), PASSWORD);
+  }
   await clickVisibly(page, page.getByRole('button', { name: 'Log in' }));
   await page.waitForURL((url) => !url.pathname.startsWith('/login'));
   await page.waitForLoadState('networkidle');
@@ -190,16 +199,16 @@ async function customerReports(page) {
 }
 
 async function opsInvestigates(page, caseId) {
-  await caption(page, 'Ravi, a support agent, opens the ops console');
-  await login(page, 'ravi@demo.in');
+  await caption(page, 'Ravi, a support agent, logs in with one click on a demo account');
+  await login(page, 'ravi@demo.in', { quickFill: true });
   await page.getByRole('heading', { name: 'Cases' }).waitFor();
-  await caption(page, 'The queue shows only cases that need action, oldest first');
+  await caption(page, 'Live queue counts up top, and the queue shows only cases that need action');
   await sleep(1800);
   await shot(page, 'ops-case-queue');
   await clickVisibly(page, page.locator(`a[href="/ops/cases/${caseId}"]`).first());
   await page.getByRole('heading', { name: `Case #${caseId}` }).waitFor();
   await page.getByText('AI proposal — needs human approval').waitFor();
-  await caption(page, 'The AI found the twin charge and proposes a full refund, with reasons and confidence');
+  await caption(page, 'Where the case stands, then the AI proposal: a full refund, with reasons and confidence');
   await sleep(2500);
   await shot(page, 'ops-case-detail-ai-proposal', { fullPage: true });
   await caption(page, 'Related transactions: the duplicate is flagged automatically');
@@ -216,7 +225,7 @@ async function opsInvestigates(page, caseId) {
 
 async function approverDecides(page, caseId) {
   await caption(page, 'Priya, an approver, reviews the case');
-  await login(page, 'priya@demo.in');
+  await login(page, 'priya@demo.in', { quickFill: true });
   await page.goto(`${WEB_URL}/ops/cases/${caseId}`);
   await page.getByText('AI proposal — needs human approval').waitFor();
   await sleep(1500);
@@ -249,7 +258,7 @@ async function approverDecides(page, caseId) {
 
 async function customerSeesRefund(page, caseId) {
   await caption(page, 'Back to Asha: her request shows the refund');
-  await login(page, 'asha@demo.in');
+  await login(page, 'asha@demo.in', { quickFill: true });
   await page.goto(`${WEB_URL}/cases/${caseId}`);
   await page.getByText('Refunded').first().waitFor();
   await sleep(2500);
@@ -259,7 +268,7 @@ async function customerSeesRefund(page, caseId) {
 
 async function adminTour(page) {
   await caption(page, 'Admins manage users and the policy rules the agent reads');
-  await login(page, 'admin@demo.in');
+  await login(page, 'admin@demo.in', { quickFill: true });
   await clickVisibly(page, page.getByRole('link', { name: 'Admin' }));
   await page.getByRole('heading', { name: 'Admin' }).waitFor();
   await sleep(1500);
