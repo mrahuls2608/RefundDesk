@@ -64,6 +64,7 @@ const config: Config = {
       boxShadow: { sm: token('shadow-sm'), lg: token('shadow-lg'), glow: token('shadow-glow') },
       fontFamily: {
         sans: ['"Inter Variable"', 'system-ui', '-apple-system', '"Segoe UI"', 'Roboto', 'sans-serif'],
+        mono: ['"JetBrains Mono Variable"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
       fontSize: {
         display: ['2rem', { lineHeight: '2.5rem', fontWeight: '700' }],

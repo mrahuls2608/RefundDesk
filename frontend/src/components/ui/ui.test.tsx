@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import { axeViolations } from '@/test/axe';
 import {
   AIProposalCard, AmountCard, Banner, Button, ConfidenceMeter, EmptyState, FilterChips, Input, Modal, RadioGroup, Select,
-  SortableTh, StatusBadge, StatusTimeline, Table, Tabs, Td, Textarea, TransactionRow,
+  SortableTh, StatusBadge, StatusTimeline, Stepper, Table, Tabs, Td, Textarea, TransactionRow,
 } from './index';
 
 describe('Button', () => {
@@ -236,5 +236,30 @@ describe('FilterChips, Table and EmptyState', () => {
     const { container } = render(<EmptyState title="No cases need action right now." />);
     expect(screen.getByText('No cases need action right now.')).toBeInTheDocument();
     expect(await axeViolations(container)).toEqual([]);
+  });
+});
+
+describe('Stepper', () => {
+  it('announces position and marks the current step', async () => {
+    const { container } = render(
+      <Stepper
+        label="Case lifecycle"
+        steps={[
+          { key: 'a', label: 'Received', state: 'done' },
+          { key: 'b', label: 'Investigate', state: 'current' },
+          { key: 'c', label: 'Decision', state: 'upcoming' },
+        ]}
+      />,
+    );
+    expect(screen.getByText('Step 2 of 3')).toBeInTheDocument();
+    expect(screen.getByRole('list', { name: 'Case lifecycle' }).tagName).toBe('OL');
+    expect(screen.getAllByRole('listitem')[1]).toHaveAttribute('aria-current', 'step');
+    expect(screen.getByText('(completed)', { exact: false })).toBeInTheDocument();
+    expect(await axeViolations(container)).toEqual([]);
+  });
+
+  it('reports the last step when everything is done', () => {
+    render(<Stepper steps={[{ key: 'a', label: 'One', state: 'done' }, { key: 'b', label: 'Two', state: 'done' }]} />);
+    expect(screen.getByText('Step 2 of 2')).toBeInTheDocument();
   });
 });

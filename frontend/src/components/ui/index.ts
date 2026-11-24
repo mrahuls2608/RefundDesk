@@ -15,6 +15,7 @@ export { Skeleton, SkeletonList } from './Skeleton';
 export { Spinner } from './Spinner';
 export { StatusBadge, Tag } from './StatusBadge';
 export { StatusTimeline, type TimelineStep } from './StatusTimeline';
+export { Stepper, type StepperStep } from './Stepper';
 export { SortableTh, Table, Td, Th, type Density, type SortDirection } from './Table';
 export { Tabs } from './Tabs';
 export { Textarea } from './Textarea';
