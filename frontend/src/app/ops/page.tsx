@@ -1,12 +1,12 @@
 'use client';
 
-import { Rows3, Rows4, Search, TriangleAlert } from 'lucide-react';
+import { CircleCheck, LoaderCircle, Rows3, Rows4, Search, Sparkles, TriangleAlert, type LucideIcon } from 'lucide-react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { PageError } from '@/components/layout/PageError';
 import {
-  Button, EmptyState, FilterChips, Select, SkeletonList, SortableTh, StatusBadge, Table, Td, Th, cx, type Density,
+  Avatar, Button, EmptyState, FilterChips, Select, SkeletonList, SortableTh, StatusBadge, Table, Td, Th, cx, type Density,
 } from '@/components/ui';
 import type { CaseFilters } from '@/lib/api/endpoints';
 import { useCases } from '@/lib/api/hooks';
@@ -70,9 +70,12 @@ export default function CaseQueuePage() {
   return (
     <>
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 ref={headingRef} tabIndex={-1} className="text-h1 outline-none">
-          Cases
-        </h1>
+        <div>
+          <h1 ref={headingRef} tabIndex={-1} className="text-3xl font-semibold tracking-tight outline-none">
+            Cases
+          </h1>
+          <p className="text-body text-text-muted">Disputes waiting for investigation, review or a decision.</p>
+        </div>
         <form role="search" onSubmit={(e) => e.preventDefault()} className="relative w-full sm:w-64">
           <label htmlFor="case-search" className="sr-only">
             Search by case ID
@@ -89,6 +92,8 @@ export default function CaseQueuePage() {
           />
         </form>
       </div>
+
+      <QueueStats selected={chip} onSelect={resetPage(setChip)} />
 
       <FilterChips label="Filter by status" chips={CHIPS} selected={chip} onSelect={resetPage(setChip)} />
 
@@ -173,15 +178,30 @@ function CaseTable({ items, density, focusedRow, sort, onSort }: {
       </thead>
       <tbody>
         {items.map((item, index) => (
-          <tr key={item.id} className={cx('hover:bg-primary-50', index === focusedRow && 'bg-primary-50')} aria-selected={index === focusedRow}>
+          <tr
+            key={item.id}
+            style={{ animationDelay: `${Math.min(index, 10) * 40}ms` }}
+            className={cx('animate-fade-up transition-colors duration-150 hover:bg-primary-50', index === focusedRow && 'bg-primary-50')}
+            aria-selected={index === focusedRow}
+          >
             <Td>
-              <Link href={`/ops/cases/${item.id}`} className="font-medium text-primary-600 underline-offset-2 hover:underline">
+              <Link href={`/ops/cases/${item.id}`} className="font-mono text-sm font-semibold text-primary-600 underline-offset-2 hover:underline">
                 #{item.id}
               </Link>
             </Td>
-            <Td>{item.customerName}</Td>
-            <Td>{ISSUE_SHORT_LABEL[item.issueType]}</Td>
-            <Td align="right">{formatINR(item.amount)}</Td>
+            <Td>
+              <span className="flex items-center gap-2">
+                <Avatar name={item.customerName} />
+                {item.customerName}
+              </span>
+            </Td>
+            <Td>
+              <span className="block">{ISSUE_SHORT_LABEL[item.issueType]}</span>
+              <span className="block text-small text-text-muted">{item.merchant}</span>
+            </Td>
+            <Td align="right">
+              <span className="tabular text-body font-semibold">{formatINR(item.amount)}</span>
+            </Td>
             <Td>
               <StatusBadge audience="staff" status={item.status} />
             </Td>
@@ -246,4 +266,53 @@ function useQueueShortcuts(actions: { focusSearch: () => void; move: (delta: num
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, []);
+}
+
+interface StatCard {
+  chip: ChipValue;
+  label: string;
+  statuses: CaseStatus[];
+  icon: LucideIcon;
+  tone: string;
+}
+
+const STAT_CARDS: StatCard[] = [
+  { chip: 'needs-action', label: 'Needs action', statuses: ['PROPOSED', 'NEEDS_MANUAL_REVIEW'], icon: Sparkles, tone: 'bg-ai-50 text-ai-700' },
+  { chip: 'NEEDS_MANUAL_REVIEW', label: 'Manual review', statuses: ['NEEDS_MANUAL_REVIEW'], icon: TriangleAlert, tone: 'bg-warning-50 text-warning-700' },
+  { chip: 'INVESTIGATING', label: 'AI working', statuses: ['OPEN', 'INVESTIGATING'], icon: LoaderCircle, tone: 'bg-info-50 text-info-700' },
+  { chip: 'CLOSED', label: 'Closed', statuses: ['CLOSED'], icon: CircleCheck, tone: 'bg-success-50 text-success-700' },
+];
+
+/** Live counts per queue. Each card is also a filter shortcut, so the numbers are actionable. */
+function QueueStats({ selected, onSelect }: { selected: ChipValue; onSelect: (chip: ChipValue) => void }) {
+  return (
+    <div role="group" aria-label="Queue summary" className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {STAT_CARDS.map((card) => (
+        <StatButton key={card.chip} card={card} pressed={selected === card.chip} onSelect={onSelect} />
+      ))}
+    </div>
+  );
+}
+
+function StatButton({ card, pressed, onSelect }: { card: StatCard; pressed: boolean; onSelect: (chip: ChipValue) => void }) {
+  const total = useCases({ status: card.statuses, size: 1 }).data?.total;
+  return (
+    <button
+      type="button"
+      aria-pressed={pressed}
+      onClick={() => onSelect(card.chip)}
+      className={cx(
+        'flex items-center gap-3 rounded-2xl border bg-surface p-4 text-left shadow-sm transition-[border-color,transform,box-shadow] duration-200 ease-out active:scale-[0.98] [@media(hover:hover)]:hover:-translate-y-0.5 [@media(hover:hover)]:hover:shadow-lg',
+        pressed ? 'border-primary-600 ring-2 ring-primary-50' : 'border-border',
+      )}
+    >
+      <span className={cx('flex h-10 w-10 shrink-0 items-center justify-center rounded-xl', card.tone)}>
+        <card.icon aria-hidden="true" className="h-5 w-5" />
+      </span>
+      <span>
+        <span className="tabular block text-2xl font-semibold leading-tight text-text">{total ?? '–'}</span>
+        <span className="block text-small text-text-muted">{card.label}</span>
+      </span>
+    </button>
+  );
 }

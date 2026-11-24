@@ -10,10 +10,11 @@ import { NotesPanel } from '@/components/ops/NotesPanel';
 import { ProposalEditor } from '@/components/ops/ProposalEditor';
 import { RelatedTransactions } from '@/components/ops/RelatedTransactions';
 import { PageError } from '@/components/layout/PageError';
-import { AIProposalCard, AmountCard, Banner, Button, Card, SkeletonList, StatusBadge, useToast } from '@/components/ui';
+import { AIProposalCard, AmountCard, Avatar, Banner, Button, Card, SkeletonList, StatusBadge, Stepper, useToast } from '@/components/ui';
 import { useCase, useRerunAgent } from '@/lib/api/hooks';
 import type { CaseDetail } from '@/lib/api/types';
 import { useAuth } from '@/lib/auth/AuthProvider';
+import { staffSteps } from '@/lib/caseSteps';
 import { formatDateTime, formatINR } from '@/lib/format';
 import { ISSUE_LABEL } from '@/lib/labels';
 import { usePageTitle } from '@/lib/usePageTitle';
@@ -31,13 +32,14 @@ export default function CaseDetailPage() {
         <ArrowLeft aria-hidden="true" className="h-4 w-4" /> Cases
       </Link>
       <div className="flex flex-wrap items-center gap-3">
-        <h1 ref={headingRef} tabIndex={-1} className="text-h1 outline-none">
-          Case #{caseId}
+        <h1 ref={headingRef} tabIndex={-1} className="text-3xl font-semibold tracking-tight outline-none">
+          Case <span className="font-mono">#{caseId}</span>
         </h1>
         {detail && <StatusBadge audience="staff" status={detail.status} />}
       </div>
       {query.isPending && <SkeletonList rows={4} label="Loading case" />}
       {query.isError && <PageError error={query.error} onRetry={() => query.refetch()} showTraceId />}
+      {detail && <CaseHeader detail={detail} />}
       {detail && (
         <div className="grid gap-6 xl:grid-cols-12">
           {/* Decision panel first in source order: on mobile it sits at the top (Design §11). */}
@@ -154,5 +156,39 @@ function ClosedSummary({ detail }: { detail: CaseDetail }) {
       )}
       {detail.decision?.comment && <p className="text-body">“{detail.decision.comment}”</p>}
     </div>
+  );
+}
+
+/** At a glance: who, how much, what kind of dispute, and where the case is in its lifecycle. */
+function CaseHeader({ detail }: { detail: CaseDetail }) {
+  return (
+    <section aria-label="Case summary" className="grid gap-6 rounded-2xl border border-border bg-surface p-6 shadow-sm lg:grid-cols-[1fr_1.4fr] lg:items-center">
+      <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4 lg:grid-cols-2">
+        <div className="col-span-2 flex items-center gap-3 sm:col-span-1 lg:col-span-2">
+          <Avatar name={detail.customer?.name ?? '?'} />
+          <div>
+            <dt className="text-xs text-text-muted">Customer</dt>
+            <dd className="font-semibold">{detail.customer?.name}</dd>
+          </div>
+        </div>
+        <div>
+          <dt className="text-xs text-text-muted">Disputed amount</dt>
+          <dd className="tabular text-2xl font-semibold tracking-tight">{formatINR(detail.transaction.amount)}</dd>
+        </div>
+        <div>
+          <dt className="text-xs text-text-muted">Issue</dt>
+          <dd className="font-semibold">{ISSUE_LABEL[detail.issueType]}</dd>
+        </div>
+        <div>
+          <dt className="text-xs text-text-muted">Opened</dt>
+          <dd className="text-body">{formatDateTime(detail.createdAt)}</dd>
+        </div>
+        <div>
+          <dt className="text-xs text-text-muted">Merchant</dt>
+          <dd className="text-body">{detail.transaction.merchant}</dd>
+        </div>
+      </dl>
+      <Stepper label="Case lifecycle" steps={staffSteps(detail.status)} />
+    </section>
   );
 }

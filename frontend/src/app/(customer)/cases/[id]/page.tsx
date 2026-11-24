@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { PageError } from '@/components/layout/PageError';
-import { AmountCard, Card, SkeletonList, StatusBadge, StatusTimeline } from '@/components/ui';
+import { AmountCard, Card, SkeletonList, StatusBadge, StatusTimeline, Stepper } from '@/components/ui';
 import { useCase } from '@/lib/api/hooks';
 import { formatDateTime, formatINR } from '@/lib/format';
 import { customerMessage, customerOutcome, customerStatus, customerTimeline } from '@/lib/customerTimeline';
@@ -25,8 +25,8 @@ export default function CaseStatusPage() {
         ← My transactions
       </Link>
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h1 ref={headingRef} tabIndex={-1} className="text-h1 outline-none">
-          Request #{caseId}
+        <h1 ref={headingRef} tabIndex={-1} className="text-3xl font-semibold tracking-tight outline-none">
+          Request <span className="font-mono">#{caseId}</span>
         </h1>
         {status && <StatusBadge audience="customer" status={status} />}
       </div>
@@ -45,7 +45,10 @@ export default function CaseStatusPage() {
             <AmountCard variant="success" label="Refunded" amount={detail.refund.amount} caption="to your original payment method" />
           )}
           {customerOutcome(detail) === 'REJECTED' && <AmountCard variant="muted" label="Requested amount" amount={detail.transaction.amount} />}
-          <Card title="Progress">
+          <Card>
+            <Stepper label="Request progress" steps={customerTimeline(detail).map(({ key, label, state }) => ({ key, label, state }))} />
+          </Card>
+          <Card title="Timeline">
             <StatusTimeline steps={customerTimeline(detail)} />
           </Card>
           <Card>
