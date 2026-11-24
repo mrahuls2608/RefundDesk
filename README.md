@@ -6,6 +6,8 @@ Next.js · Express · TypeScript · MongoDB · Redis (BullMQ) · Tailwind CSS ·
 
 > Mock data only. No real payment gateway, names, cards or bank details.
 
+![RefundDesk landing page](docs/images/landing-hero.png)
+
 ---
 
 ## Why it exists
@@ -58,7 +60,9 @@ The original design docs targeted Java/Spring + PostgreSQL. [`docs/STACK.md`](do
 
 ## Features
 
-**Customer portal (`/`)**: transactions grouped by day · report an issue · case status timeline (Received → In review → Decision → Refunded) · outcome card · polls while the AI works · live-region announcements.
+**Landing page (`/`)**: floating glass nav with a morphing mobile menu · a live hero demo of one case going from report to refund (pausable, static under reduced motion) · sticky scroll walkthrough of the case lifecycle · word by word tagline reveal · bento grid of guarantees · an interactive double click test where the ledger never passes one refund · CI stats that count up · FAQ with schema.org markup · generated social image and favicon.
+
+**Customer portal (`/transactions`)**: transactions grouped by day · report an issue · case status timeline (Received → In review → Decision → Refunded) · outcome card · polls while the AI works · live-region announcements.
 
 **Ops console (`/ops`)**: case queue with status chips, type filter, sort, pagination, overdue flag, `/` `j` `k` `Enter` shortcuts, compact rows · case detail with transaction, customer message, related transactions with "Possible duplicate", AI proposal card with confidence and reasons, manual proposal editor, re-run AI, notes, timeline and audit tabs · approver-only Approve / Reject dialogs with amount cap, required comment and conflict handling · admin users and policy rules.
 
@@ -98,7 +102,7 @@ Password for all: `Demo@123`
 | Approver | `priya@demo.in` |
 | Admin | `admin@demo.in` |
 
-Try it: log in as Asha → report "Charged twice" on the FoodNow ₹499 payment → log in as Priya at `/ops` → open the case → Approve → Asha sees "₹499.00 refunded".
+Try it: open http://localhost:3000, choose **Try the live demo**, log in as Asha → report "Charged twice" on the FoodNow ₹499 payment → log in as Priya at `/ops` → open the case → Approve → Asha sees "₹499.00 refunded".
 
 ## Tests
 
@@ -112,6 +116,10 @@ Try it: log in as Asha → report "Charged twice" on the FoodNow ₹499 payment 
 CI (`.github/workflows`) runs all of the above, with MongoDB and Redis as containers. Latest run: 133 unit, 96 integration and 30 frontend tests passing.
 
 **Eval score:** 22/22 with the offline `mock` provider. That provider is a heuristic, so this only proves the harness; record the real model's score here once it has run.
+
+| Live hero demo | Double click test |
+| --- | --- |
+| ![Hero](docs/images/landing-hero.png) | ![Double click test](docs/images/landing-double-click.png) |
 
 ## Configuration
 
@@ -134,7 +142,7 @@ Health check: `GET /actuator/health`. Metrics: `GET /actuator/prometheus` (ADMIN
 backend/          Express API, agent worker, tests (unit, integration, eval)
   src/modules/    user · auth · transaction · policy · casemgmt · agent · refund · audit · admin
   resources/prompts/refund-investigator-v1.txt
-frontend/         Next.js app: customer portal (/) and ops console (/ops)
+frontend/         Next.js app: landing page (/), customer portal (/transactions) and ops console (/ops)
   src/components/ui/   presentational component kit (tokens only)
 docs/             PRD, TRD, Design, Rules, Phases, STACK (stack mapping)
 CLAUDE.md         Project rules for AI coding assistants
