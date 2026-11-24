@@ -8,3 +8,6 @@ coverage
 dump.rdb
 next-env.d.ts
 *.tsbuildinfo
+docs/demo.webm
+docs/.video-tmp
+docs/demo-failure.png

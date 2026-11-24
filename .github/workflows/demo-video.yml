@@ -1,0 +1,86 @@
+name: demo-video
+# Records the end to end demo against the real stack (MongoDB replica set, Redis, API, web)
+# and commits docs/demo.mp4 plus docs/screens/*.png back to the branch.
+on:
+  workflow_dispatch:
+  push:
+    paths: ["frontend/e2e/**", ".github/workflows/demo-video.yml"]
+
+permissions:
+  contents: write
+
+concurrency:
+  group: demo-video-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  record:
+    runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis:7
+        ports: ["6379:6379"]
+    env:
+      ALLOW_DEMO_SEED: "true"
+      PORT: "8080"
+      MONGODB_URI: mongodb://127.0.0.1:27017/refunddesk?replicaSet=rs0&directConnection=true
+      REDIS_URL: redis://127.0.0.1:6379
+      JWT_SECRET: demo-recording-secret-not-used-anywhere-else-123
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+      LOGIN_RATE_LIMIT_PER_MIN: "100"
+      RUN_WORKER_INLINE: "true"
+      LLM_PROVIDER: mock
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8080
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+        with: { ref: "${{ github.ref_name }}" }
+      - name: Start MongoDB replica set
+        run: |
+          docker run -d --name mongo -p 27017:27017 mongo:7 --replSet rs0 --bind_ip_all
+          for i in $(seq 1 30); do
+            docker exec mongo mongosh --quiet --eval "try { rs.status().ok } catch (e) { rs.initiate({_id:'rs0',members:[{_id:0,host:'localhost:27017'}]}).ok }" && break
+            sleep 2
+          done
+          until docker exec mongo mongosh --quiet --eval "db.hello().isWritablePrimary" | grep -q true; do sleep 1; done
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: npm }
+      - run: npm ci
+      - name: Build and start the API
+        run: |
+          npm run build -w backend
+          (cd backend && NODE_ENV=production node dist/seed/run.js)
+          (cd backend && NODE_ENV=production nohup node dist/index.js > ../api.log 2>&1 &)
+          for i in $(seq 1 30); do curl -fs http://localhost:8080/actuator/health && break; sleep 1; done
+      - name: Build and start the web app
+        run: |
+          npm run build -w frontend
+          cp -r frontend/.next/static frontend/.next/standalone/frontend/.next/
+          cp -r frontend/public frontend/.next/standalone/frontend/
+          (cd frontend/.next/standalone/frontend && PORT=3000 HOSTNAME=0.0.0.0 nohup node server.js > ../../../../web.log 2>&1 &)
+          for i in $(seq 1 30); do curl -fs -o /dev/null http://localhost:3000/ && break; sleep 1; done
+      - run: npx playwright install --with-deps chromium
+      - name: Record the demo
+        run: WEB_URL=http://localhost:3000 OUT_DIR=docs node frontend/e2e/record-demo.mjs
+      - name: Convert to MP4
+        run: |
+          ffmpeg -loglevel error -y -i docs/demo.webm -c:v libx264 -preset slow -crf 26 -pix_fmt yuv420p -movflags +faststart docs/demo.mp4
+          rm docs/demo.webm
+          ls -la docs/demo.mp4 docs/screens
+      - name: Upload logs on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: demo-logs
+          path: |
+            api.log
+            web.log
+            docs/demo-failure.png
+      - name: Commit the video and screenshots
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/demo.mp4 docs/screens
+          git diff --cached --quiet && exit 0
+          git commit -m "docs: record end to end demo video and screenshots [skip ci]"
+          git push
