@@ -10,6 +10,19 @@ Next.js · Express · TypeScript · MongoDB · Redis (BullMQ) · Tailwind CSS ·
 
 ---
 
+## Demo
+
+**[▶ Watch the end to end demo (1 min 52 s)](docs/demo.mp4)**: landing page → customer reports a double charge → AI proposal → ops note → approver approves → refunded once → audit log → customer sees the refund → admin. Recorded by Playwright against the real stack (MongoDB, Redis, API, web) in the `demo-video` workflow; rerun it to refresh the video and screenshots.
+
+| | | |
+| --- | --- | --- |
+| ![Landing](docs/screens/01-landing-hero.png) Landing page | ![Transactions](docs/screens/05-customer-transactions.png) Customer transactions | ![Report](docs/screens/07-customer-report-form.png) Report an issue |
+| ![In review](docs/screens/08-customer-case-in-review.png) Case in review | ![Queue](docs/screens/09-ops-case-queue.png) Ops case queue | ![AI proposal](docs/screens/10-ops-case-detail-ai-proposal.png) AI proposal |
+| ![Approve](docs/screens/13-approver-approve-dialog.png) Approve dialog | ![Refunded](docs/screens/14-approver-case-refunded.png) Refunded once | ![Audit](docs/screens/15-approver-audit-log.png) Audit log |
+| ![Customer refunded](docs/screens/17-customer-case-refunded.png) Customer sees refund | ![Admin](docs/screens/18-admin-users.png) Admin | ![Mobile](docs/screens/23-mobile-landing.png) Mobile |
+
+All 25 screens are in [`docs/screens`](docs/screens).
+
 ## Why it exists
 
 Customers with a duplicate or failed-but-debited payment have no clear way to report it. Support teams investigate every case by hand, and a wrong or duplicate refund is real money lost. RefundDesk:
